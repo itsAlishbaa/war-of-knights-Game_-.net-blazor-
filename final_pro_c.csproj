@@ -7,9 +7,4 @@
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Data\" />
-    <Folder Include="Components\Services\" />
-  </ItemGroup>
-
 </Project>
