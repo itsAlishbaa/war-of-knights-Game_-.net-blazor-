@@ -1242,91 +1242,122 @@
         margin-left: auto;
     }
 /* Professional Medieval-Themed Footer Styles */
+/* Ultimate CSS Fix for Locked Layouts */
+/* Ultimate Force-Fix: Floating Bottom Footer */
+/* Clean & Smart Dynamic Footer */
+/* Sleek Bottom Bar Footer */
 .site-footer {
     display: block !important;
-    clear: both !important;
-    position: relative !important;
-    z-index: 99 !important; /* Game full screen wrapper se niche rahega */
-    background: linear-gradient(135deg, #111622 0%, #070b14 100%); /* Game background palette selection */
-    color: #94a3b8;
-    padding: 50px 30px 25px 30px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-top: 40px;
-    border-top: 2px solid #1e293b; /* Premium border sync */
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    position: fixed !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: calc(100% - 250px) !important; /* Sidebar space left blank */
+    z-index: 9999 !important;
+    background: rgba(11, 17, 32, 0.95) !important; /* Semi-transparent dark blur */
+    backdrop-filter: blur(10px) !important;
+    color: #94a3b8 !important;
+    padding: 12px 30px !important; /* Minimal height */
+    font-family: 'Segoe UI', sans-serif !important;
+    border-top: 2px solid #1e293b !important;
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.6) !important;
+    box-sizing: border-box !important;
+}
+
+/* Taake aakhri card is bar ke peeche bilkul dab na jaye */
+.level-select-grid {
+    margin-bottom: 80px !important;
 }
 
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-    gap: 30px;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important; /* Vertically centered */
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    gap: 20px !important;
 }
 
-.footer-info {
-    flex: 2; /* Info section ko thoda zyada space diya professional look k liye */
-    min-width: 280px;
+.footer-section {
+    flex: 1 !important;
 }
 
-    .footer-info h3 {
-        color: #ffb703; /* Gold accent color for game heading */
-        font-size: 1.4rem;
-        margin-top: 0;
-        margin-bottom: 15px;
-        letter-spacing: 1px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+/* Left Section */
+.footer-info h3 {
+    color: #ffb703 !important;
+    font-size: 1.05rem !important;
+    margin: 0 0 4px 0 !important;
+}
+
+.footer-info p {
+    font-size: 0.75rem !important;
+    color: #64748b !important;
+    margin: 0 !important;
+}
+
+/* Center Section: Developers Vertical Stack */
+.footer-creators {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.section-title {
+    color: #fff !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 4px !important;
+    font-weight: 600 !important;
+}
+
+.creators-list {
+    display: flex !important;
+    flex-direction: column !important; /* Line by line alignment */
+    gap: 2px !important;
+    align-items: flex-start !important;
+}
+
+    .creators-list span {
+        font-size: 0.8rem !important;
+        color: #cbd5e1 !important;
+        font-weight: 500 !important;
     }
 
-    .footer-info p {
-        line-height: 1.6;
-        font-size: 0.95rem;
-        color: #94a3b8;
-    }
-
+/* Right Section: Clean Row Links with Icons */
 .footer-links {
-    flex: 1;
-    min-width: 220px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
 }
 
-    .footer-links h4 {
-        color: #fff;
-        font-size: 1.1rem;
-        margin-top: 0;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+.icon-links-grid {
+    display: flex !important;
+    flex-direction: row !important; /* Stays in a clean row layout */
+    gap: 15px !important;
+}
+
+    .icon-links-grid a {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        color: #94a3b8 !important;
+        text-decoration: none !important;
+        font-size: 0.8rem !important;
+        transition: color 0.2s ease !important;
     }
 
-    .footer-links ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-        .footer-links ul li {
-            margin-bottom: 12px;
+        .icon-links-grid a:hover {
+            color: #ffb703 !important;
         }
 
-            .footer-links ul li a {
-                color: #64748b;
-                text-decoration: none;
-                font-size: 0.95rem;
-                transition: color 0.2s ease, padding-left 0.2s ease;
-                display: inline-block;
-            }
+        .icon-links-grid a.disconnect-link:hover {
+            color: #ef4444 !important;
+        }
 
-                .footer-links ul li a:hover {
-                    color: #ffb703; /* Hover par gold glow touch */
-                    padding-left: 5px; /* Smooth dynamic transition effect */
-                }
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid #1e293b ;
-    padding-top: 20px;
-    margin-top: 40px;  
-    font-size: 0.85rem; 
-    color: #475569; 
+/* Responsive adjustment for small monitors */
+@media (max-width: 1024px) {
+    .site-footer {
+        width: 100% !important;
+        left: 0 !important;
+    }
 }

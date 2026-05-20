@@ -540,35 +540,41 @@ else if (CurrentView == ViewState.GameScreen)
             <button class="ctrl-btn" style="padding:12px 24px !important; cursor:pointer !important; font-size:1rem !important; font-weight:bold !important; background:#1e293b !important; color:#fff !important; border:1px solid #475569 !important; border-radius:6px !important;" @onclick="Engine.TogglePause">⏸ PAUSE</button>
         </div>     
     </div>           
-}   
+  }
+@* ------ FOOTER INJECTION WITH GAME THEME CONDITION ------ *@
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-section footer-info">
+            <h3>⚔️ Iron Crusade Chronicles</h3>
+            <p>&copy; 2026 Battle of Knight | Powered by .NET 10 Blazor Server.</p>
+        </div>
+
+        <div class="footer-section footer-creators">
+            <span class="section-title">🛠️ Vanguard Devs:</span>
+            <div class="creators-list">
+                <span>⚡ Alishba</span>
+                <span>🛡️ Adan</span>
+                <span>🔮 Shemaan</span>
+            </div>
+        </div>
+
+        <div class="footer-section footer-links">
+            <span class="section-title">Realm Links</span>
+            <div class="icon-links-grid">
+                <a href="#" @onclick='() => SetTab("home")' title="Citadel Home">🏰 <span>Home</span></a>
+                <a href="#" @onclick='() => SetTab("profile")' title="Player Profile">🛡️ <span>Profile</span></a>
+                <a href="#" @onclick='() => SetTab("settings")' title="Settings Panel">⚙️ <span>Settings</span></a>
+                <a href="#" @onclick="LogOut" title="Disconnect" class="disconnect-link">✕ <span>Exit</span></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
 </main>   
 </div>
 
 
-@* ------ FOOTER INJECTION WITH GAME THEME CONDITION ------ *@
-@if (CurrentView == ViewState.MainApp && ActiveTab == "home")
-{
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-info">
-                <h3>⚔️ Iron Crusade Chronicles</h3>
-                <p>An immersive server-side Blazor arena experience. Master your blade, defeat the undead hordes, and claim your rightful place in the Vanguard vanguard.</p>
-            </div>
-            <div class="footer-links">
-                <h4>Realm Quick Links</h4>
-                <ul>
-                    <li><a href="#" @onclick='() => SetTab("home")'>🏰 Citadel Home</a></li>
-                    <li><a href="#" @onclick='() => SetTab("profile")'>🛡️ Player Profile</a></li>
-                    <li><a href="#" @onclick='() => SetTab("settings")'>⚙️ Settings Panel</a></li>
-                    <li><a href="#" @onclick="LogOut">✕ Disconnect</a></li>
-                </ul>
-            </div> 
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Battle of Knight | Powered by .NET 10 Blazor Server.</p>
-        </div>
-    </footer>      
-}
+
 
 @code {
     private enum ViewState { Auth, MainApp, GameScreen }
