@@ -71,7 +71,7 @@
 
     <main class="main-content">
         @* ------------------ AUTH PAGE ------------------ *@
-        @if (CurrentView == ViewState.Auth)
+        @* @if (CurrentView == ViewState.Auth)
         {
             <div class="auth-box">
                 <h2 class="auth-title">⚔ BATTLE OF KNIGHT</h2>
@@ -103,7 +103,52 @@
                     </div>
                 }
             </div>
+        } *@
+        @* ------------------ AUTH PAGE UI ------------------ *@
+@if (CurrentView == ViewState.Auth)
+{
+    <div class="auth-box">
+        <h2 class="auth-title">⚔ BATTLE OF KNIGHT</h2>
+        <div class="auth-tabs">
+            <button class="auth-tab @(IsLoginTab ? "active" : "")" @onclick="SwitchToLoginTab">LOGIN</button>
+            <button class="auth-tab @(!IsLoginTab ? "active" : "")" @onclick="SwitchToRegisterTab">REGISTER</button>
+        </div>
+
+        @* Error Notification *@
+        @if (!string.IsNullOrEmpty(AuthErrorMessage))
+        {
+            <div class="auth-msg error" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid rgba(239, 68, 68, 0.2); text-align: center; font-weight: bold;">
+                ⚠️ @AuthErrorMessage
+            </div>
         }
+
+        @* Success Notification *@
+        @if (!string.IsNullOrEmpty(AuthSuccessMessage))
+        {
+            <div class="auth-msg success" style="color: #22c55e; background: rgba(34, 197, 94, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid rgba(34, 197, 94, 0.2); text-align: center; font-weight: bold;">
+                ✅ @AuthSuccessMessage
+            </div>
+        }
+
+        @if (IsLoginTab)
+        {
+            <div class="auth-form">
+                <input type="text" placeholder="Username" @bind="AuthUsername" class="auth-input" />
+                <input type="password" placeholder="Password" @bind="AuthPassword" class="auth-input" />
+                <button class="auth-btn" @onclick="HandleLogin">ENTER THE REALM</button>
+            </div>
+        }
+        else
+        {
+            <div class="auth-form">
+                <input type="text" placeholder="Choose Username" @bind="AuthUsername" class="auth-input" />
+                <input type="text" placeholder="Your Email (e.g. name@domain.com)" @bind="AuthEmail" class="auth-input" />
+                <input type="password" placeholder="Secure Password (Min 8 chars)" @bind="AuthPassword" class="auth-input" />
+                <button class="auth-btn" @onclick="HandleRegister">CREATE ACCT</button>
+            </div>
+        }
+    </div>
+}
 
         @* ------------------ MAIN DASHBOARD ------------------ *@
         @if (CurrentView == ViewState.MainApp)
@@ -167,306 +212,358 @@
                     </tbody>
                 </table>
             }
-@if (ActiveTab == "settings")
+            else if (ActiveTab == "settings")
+            {
+                <h2 class="settings-title">⚙ Settings Panel</h2>
+                <div class="settings-card">
+                    <div class="setting-row">
+                        <div class="setting-info"><h4>🌑 Dark Theme</h4><p>Classic dark medieval visual landscape.</p></div>
+                        <label class="toggle-wrap">
+                            <input type="checkbox" checked="@IsDarkStyle" @onchange="ToggleDark" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info"><h4>☀️ Light Theme</h4><p>Bright high-contrast design layer.</p></div>
+                        <label class="toggle-wrap">
+                            <input type="checkbox" checked="@IsLightStyle" @onchange="ToggleLight" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info"><h4>👁 Colorblind Mode</h4><p>Contrast correction properties.</p></div>
+                        <label class="toggle-wrap">
+                            <input type="checkbox" checked="@IsColorblindStyle" @onchange="ToggleColorblind" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            }
+        }
+@* ------------------ REALTIME ARENA ENGINE ------------------ *@
+else if (CurrentView == ViewState.GameScreen)
 {
-    <h2 class="settings-title">⚙ Settings Panel</h2>
-    <div class="settings-card">
+    var config = GameEngineService.Levels[Engine.State!.Level];
+    
+    bool isKnightAttacking = LiveHitTexts.Any(h => h.IsEnemy == true && h.Text.Contains("⚔"));
+    bool isEnemyAttacking = LiveHitTexts.Any(h => h.IsEnemy == false);
+    bool isKnightHit = LiveHitTexts.Any(h => h.IsEnemy == false && h.Text.Contains("💥"));
+    bool isEnemyHit = LiveHitTexts.Any(h => h.IsEnemy == true && h.Text.Contains("⚔"));
+    
+    @* FORCE FULL SCREEN SCREEN WRAPPER: !important ke sath parent container ko kuchalne ke liye *@
+    <div class="game-wrapper" style="position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; max-width: 100vw !important; max-height: 100vh !important; background: #0b111e; z-index: 999999 !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; box-sizing: border-box !important;">
         
-        <div class="setting-row">
-            <div class="setting-info">
-                <h4>🌑 Dark Theme</h4>
-                <p>Classic dark medieval visual landscape.</p>
-            </div>
-            <label class="toggle-wrap">
-                <input type="checkbox" checked="@IsDarkStyle" @onchange="ToggleDark" />
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-
-        <div class="setting-row">
-            <div class="setting-info">
-                <h4>☀️ Light Theme</h4>
-                <p>Bright high-contrast design layer.</p>
-            </div>
-            <label class="toggle-wrap">
-                <input type="checkbox" checked="@IsLightStyle" @onchange="ToggleLight" />
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-
-        <div class="setting-row">
-            <div class="setting-info">
-                <h4>👁 Colorblind Mode</h4>
-                <p>High-contrast blue & orange tint for color vision correction.</p>
-            </div>
-            <label class="toggle-wrap">
-                <input type="checkbox" checked="@IsColorblindStyle" @onchange="ToggleColorblind" />
-                <span class="toggle-slider" style="background-color: @(IsColorblindStyle ? "#2196F3" : "")"></span>
-            </label>
-        </div>
-
-    </div>
-}
-        @* ------------------ REALTIME ARENA ENGINE ------------------ *@
-        else if (CurrentView == ViewState.GameScreen)
-        {
-            var config = GameEngineService.Levels[Engine.State!.Level];
+        @* MAIN VIEWPORT CONTAINER *@
+        <div class="game-viewport" style="position: relative !important; flex-grow: 1 !important; width: 100% !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important;">
             
-            bool isKnightAttacking = LiveHitTexts.Any(h => h.IsEnemy == true && h.Text.Contains("⚔"));
-            bool isEnemyAttacking = LiveHitTexts.Any(h => h.IsEnemy == false);
-            bool isKnightHit = LiveHitTexts.Any(h => h.IsEnemy == false && h.Text.Contains("💥"));
-            bool isEnemyHit = LiveHitTexts.Any(h => h.IsEnemy == true && h.Text.Contains("⚔"));
-            
-            <div class="game-wrapper">
-                <div class="game-bg">
-                    <div class="sky"></div><div class="ground"></div><div class="moon"></div>
-                    <div class="torch" style="position:absolute;bottom:37%;left:15%;font-size:1.8rem">🔥</div>
-                    <div class="torch" style="position:absolute;bottom:37%;right:15%;font-size:1.8rem">🔥</div>
-                </div>
+            @* TOP LEVEL CINEMATIC BATTLE FORTRESS BACKGROUND *@
+            <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" style="position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; pointer-events: none !important; z-index: 1 !important;">
+                <defs>
+                    @* Sky Gradient *@
+                    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#141e30" />
+                        <stop offset="60%" stop-color="#243b55" />
+                        <stop offset="100%" stop-color="#b06ab3" stop-opacity="0.3" />
+                    </linearGradient>
+                    @* Mountains/Castle Silhouettes Gradients *@
+                    <linearGradient id="fortGradFar" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#2d3848" stop-opacity="0.7" />
+                        <stop offset="100%" stop-color="#111622" />
+                    </linearGradient>
+                    <linearGradient id="fortGradClose" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#1d2433" />
+                        <stop offset="100%" stop-color="#090d16" />
+                    </linearGradient>
+                    @* Sun/Moon Eclipse Glow *@
+                    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#ffe29d" stop-opacity="0.4" />
+                        <stop offset="40%" stop-color="#ffb703" stop-opacity="0.1" />
+                        <stop offset="100%" stop-color="#141e30" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
 
-                @* REAL-TIME HUD STATUS BAR *@
-                <div class="game-hud">
-                    <div class="hud-health">
-                        <div class="hud-health-label"><span>🛡️ KNIGHT</span><span>@Engine.State.KnightHP / @Engine.State.KnightMaxHP</span></div>
-                        <div class="hp-bar"><div class="hp-fill hp-fill-knight" style="width:@(CalculateHpPercentage(Engine.State.KnightHP, Engine.State.KnightMaxHP))%; background: @GetHpBarColor(Engine.State.KnightHP, Engine.State.KnightMaxHP)"></div></div>
-                    </div>
-                    <div class="hud-center">
-                        <div class="hud-level-badge">@config.Badge</div>
-                        <div class="hud-score">⚔ @Engine.State.Score PTS</div>
-                    </div>
-                    <div class="hud-health" style="align-items:flex-end">
-                        <div class="hud-health-label"><span>@Engine.State.EnemyHP / @Engine.State.EnemyMaxHP</span><span>@config.EnemyLabel</span></div>
-                        <div class="hp-bar"><div class="hp-fill hp-fill-enemy" style="width:@(CalculateHpPercentage(Engine.State.EnemyHP, Engine.State.EnemyMaxHP))%"></div></div>
-                    </div>
-                </div>
+                @* Sky Layers *@
+                <rect width="1200" height="400" fill="url(#skyGrad)" />
+                <circle cx="600" cy="140" r="180" fill="url(#moonGlow)" />
+                <circle cx="600" cy="140" r="45" fill="#ffe29d" opacity="0.8" />
 
-                @* GAMEPLAY RUNTIME INTERACTIVE ARENA *@
-                <div class="game-arena" id="gameArena" style="position: relative; overflow: hidden; min-height: 280px; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 80px;">
+                @* Far Away Mountains & Clouds *@
+                <path d="M0 260 L120 210 L280 250 L450 190 L600 240 L820 180 L1020 230 L1200 190 L1200 400 L0 400 Z" fill="#1a2230" opacity="0.5" />
+
+                @* LEFT SIDE CITADEL FORTRESS *@
+                <g fill="url(#fortGradFar)">
+                    <rect x="60" y="110" width="45" height="150" />
+                    <polygon points="55,110 82,70 110,110" />
+                    <rect x="150" y="80" width="55" height="180" />
+                    <polygon points="145,80 177,35 210,80" />
+                    <rect x="100" y="160" width="60" height="100" />
+                    <rect x="0" y="180" width="70" height="90" />
+                </g>
+
+                @* RIGHT SIDE SEIGE WALLS & DRAGON CORNER *@
+                <g fill="url(#fortGradFar)">
+                    <rect x="940" y="90" width="50" height="180" />
+                    <polygon points="935,90 965,40 1015,90" />
+                    <rect x="1040" y="130" width="40" height="140" />
+                    <polygon points="1035,130 1060,95 1085,130" />
+                    <rect x="980" y="170" width="70" height="100" />
+                    <rect x="1070" y="180" width="130" height="90" />
+                </g>
+
+                @* CLOSE FRONT GROUND LAYER *@
+                <g fill="url(#fortGradClose)">
+                    <rect x="220" y="130" width="75" height="170" />
+                    <path d="M220 130 H295 L285 110 H230 Z" />
+                    <rect x="230" y="90" width="15" height="20" />
+                    <rect x="270" y="90" width="15" height="20" />
+                    <rect x="850" y="150" width="70" height="150" />
+                    <path d="M840 150 L860 130 L910 130 L930 150 Z" />
                     
-                    @* DYNAMIC HIT-TEXT ANCHORS (FIX: Added .ToList() to prevent Thread Crash Exception) *@
-                    @foreach (var hit in LiveHitTexts.ToList())
-                    {
-                        <div class="hit-text" style="color:@hit.Color; font-size:1.8rem; font-weight:black; position:absolute; top:@(hit.Top)%; @(hit.IsEnemy ? "right:30%;" : "left:30%;") text-shadow:0 0 15px #000; z-index: 10; animation: floatUp 0.6s ease-out;">
-                            @hit.Text
-                        </div>
-                    }
+                    <path d="M0 270 Q300 280, 600 275 T1200 270 L1200 400 L0 400 Z" />
+                </g>
 
-                    @* FIGHTER: KNIGHT *@
-                    <div class="fighter @(isKnightAttacking ? "knight-dash-attack" : "") @(isKnightHit ? "hit-shake" : "")" 
-                         style="transform: translateX(@(Engine.KnightMarginLeft)px); z-index: 2; margin-bottom: 30px;">
-                        <div class="fighter-sprite">
-                            <svg width="140" height="160" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
+                @* Cinematic Battlefield War Dust/Glow Effect *@
+                <rect x="0" y="270" width="1200" height="130" fill="rgba(11, 17, 30, 0.4)" />
+                <line x1="0" y1="272" x2="1200" y2="272" stroke="rgba(255,183,3,0.15)" stroke-width="2" />
+            </svg>
+
+            @* Torches *@
+            <div class="torch" style="position:absolute !important; bottom:32% !important; left:12% !important; font-size:2rem !important; filter: drop-shadow(0 0 12px #ff5722) !important; z-index: 2 !important;">🔥</div>
+            <div class="torch" style="position:absolute !important; bottom:32% !important; right:12% !important; font-size:2rem !important; filter: drop-shadow(0 0 12px #ff5722) !important; z-index: 2 !important;">🔥</div>
+
+            @* REAL-TIME HUD STATUS BAR *@
+            <div class="game-hud" style="position: relative !important; z-index: 3 !important; display: flex !important; justify-content: space-between !important; padding: 25px 40px !important; background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0)) !important; width: 100% !important; box-sizing: border-box !important;">
+                <div class="hud-health" style="display: flex; flex-direction: column;">
+                    <div class="hud-health-label" style="color:#fff !important; font-weight:bold !important; font-size:1.1rem !important; text-shadow: 2px 2px 4px #000 !important; margin-bottom:6px !important;"><span>🛡️ KNIGHT</span></div>
+                    <div class="hp-bar" style="background:#1e293b !important; width:280px !important; height:16px !important; border-radius:4px !important; overflow:hidden !important; border:2px solid #475569 !important; box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;"><div class="hp-fill hp-fill-knight" style="width:@(CalculateHpPercentage(Engine.State.KnightHP, Engine.State.KnightMaxHP))% !important; height:100% !important; background: @GetHpBarColor(Engine.State.KnightHP, Engine.State.KnightMaxHP) !important;"></div></div>
+                    <div style="color:#94a3b8 !important; font-size:0.9rem !important; font-weight:bold !important; margin-top:4px !important;">@Engine.State.KnightHP / @Engine.State.KnightMaxHP</div>
+                </div>
+                <div class="hud-center" style="text-align:center !important; color:#fff !important; align-self: center !important;">
+                    <div class="hud-level-badge" style="background:#ffb703 !important; color:#000 !important; padding:4px 14px !important; border-radius:20px !important; font-weight:bold !important; font-size:1rem !important; box-shadow: 0 4px 6px rgba(0,0,0,0.2) !important; display: inline-block;">LVL @Engine.State.Level</div>
+                    <div class="hud-score" style="font-weight:bold !important; font-size:1.5rem !important; margin-top:6px !important; text-shadow:0 0 12px #ffb703 !important;">⚔ @Engine.State.Score PTS</div>
+                </div>
+                <div class="hud-health" style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <div class="hud-health-label" style="color:#fff !important; font-weight:bold !important; font-size:1.1rem !important; text-shadow: 2px 2px 4px #000 !important; margin-bottom:6px !important;"><span>@config.EnemyLabel 💀</span></div>
+                    <div class="hp-bar" style="background:#1e293b !important; width:280px !important; height:16px !important; border-radius:4px !important; overflow:hidden !important; border:2px solid #475569 !important; box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;"><div class="hp-fill hp-fill-enemy" style="width:@(CalculateHpPercentage(Engine.State.EnemyHP, Engine.State.EnemyMaxHP))% !important; height:100% !important; background:#ef4444 !important;"></div></div>
+                    <div style="color:#94a3b8 !important; font-size:0.9rem !important; font-weight:bold !important; margin-top:4px !important;">@Engine.State.EnemyHP / @Engine.State.EnemyMaxHP</div>
+                </div>
+            </div>
+
+            @* GAMEPLAY RUNTIME INTERACTIVE ARENA *@
+            <div class="game-arena" id="gameArena" style="position: relative !important; z-index: 3 !important; overflow: hidden !important; flex-grow: 1 !important; display: flex !important; align-items: flex-end !important; justify-content: space-between !important; padding: 0 10% 40px 10% !important; width: 100% !important; box-sizing: border-box !important;">
+                
+                @* DYNAMIC HIT-TEXT ANCHORS *@
+                @foreach (var hit in LiveHitTexts.ToList())
+                {
+                    <div class="hit-text" style="color:@hit.Color !important; font-size:2.2rem !important; font-weight:900 !important; position:absolute !important; top:@(hit.Top)% !important; @(hit.IsEnemy ? "right:35%;" : "left:35%;") text-shadow:0 0 15px #000 !important; z-index: 10 !important; animation: floatUp 0.6s ease-out;">
+                        @hit.Text
+                    </div>
+                }
+
+                @* FIGHTER: KNIGHT *@
+                <div class="fighter @(isKnightAttacking ? "knight-dash-attack" : "") @(isKnightHit ? "hit-shake" : "")" 
+                     style="transform: translateX(@(Engine.KnightMarginLeft)px) !important; z-index: 2 !important; margin-bottom: 20px !important;">
+                    <div class="fighter-sprite">
+                        <svg width="160" height="180" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="armorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#9aa8b8" />
+                                    <stop offset="50%" stop-color="#5a6675" />
+                                    <stop offset="100%" stop-color="#343d46" />
+                                </linearGradient>
+                                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFE066" />
+                                    <stop offset="100%" stop-color="#CC8800" />
+                                </linearGradient>
+                                <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#FFFFFF" />
+                                    <stop offset="35%" stop-color="#DCE4EC" />
+                                    <stop offset="100%" stop-color="#A5B1C2" />
+                                </linearGradient>
+                            </defs>
+                            <ellipse cx="65" cy="150" rx="40" ry="8" fill="rgba(0,0,0,0.45)" />
+                            <rect x="44" y="110" width="16" height="35" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3" rx="4" />
+                            <rect x="70" y="110" width="16" height="35" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3" rx="4" />
+                            <path d="M38 138 C38 132, 44 132, 44 132 H60 V146 H38 Z" fill="#2F3640" stroke="#1E232A" stroke-width="2" />
+                            <path d="M70 132 H86 C86 132, 92 132, 92 138 V146 H70 Z" fill="#2F3640" stroke="#1E232A" stroke-width="2" />
+                            <path d="M32 60 H98 L90 115 H40 Z" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3.5" />
+                            <path d="M40 60 L65 95 L90 60" fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-linecap="round" />
+                            <rect x="48" y="100" width="34" height="10" fill="url(#goldGrad)" stroke="#1E232A" stroke-width="2" rx="2" />
+                            <circle cx="65" cy="38" r="24" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3.5" />
+                            <path d="M49 24 H81 V36 H49 Z" fill="#2F3640" stroke="#1E232A" stroke-width="2" />
+                            <path d="M61 14 L65 -2 L69 14 Z" fill="#FF4757" />
+                            <rect x="52" y="30" width="10" height="4" rx="1" fill="#00D2D3" filter="drop-shadow(0 0 4px #00D2D3)" />
+                            <rect x="68" y="30" width="10" height="4" rx="1" fill="#00D2D3" filter="drop-shadow(0 0 4px #00D2D3)" />
+                            @{ string knightSwordAngle = isKnightAttacking ? "75" : (Engine.State.Blocking ? "-30" : "15"); }
+                            <g transform="translate(100, 85) rotate(@knightSwordAngle)" style="transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: 10px 20px;">
+                                <rect x="6" y="15" width="8" height="28" fill="#57606F" rx="2" stroke="#1E232A" stroke-width="2" />
+                                <rect x="-12" y="12" width="44" height="7" fill="url(#goldGrad)" stroke="#1E232A" stroke-width="2" rx="2" />
+                                <path d="M3 12 L6 -85 L10 -105 L14 -85 L17 12 Z" fill="url(#bladeGrad)" stroke="#1E232A" stroke-width="2.5" />
+                            </g>
+                            <g transform="translate(@(Engine.State.Blocking ? "55" : "22"), 68)" style="transition: transform 0.08s ease-out;">
+                                <path d="M-22 -28 H22 V5 C22 28, 0 52, 0 58 C0 52, -22 28, -22 5 Z" fill="#B33939" stroke="#1E232A" stroke-width="3.5" />
+                                <path d="M-22 5 H22 M0 -28 V58" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="fighter-label" style="text-align:center !important; font-weight:bold !important; color:#fff !important; margin-top:5px !important; text-shadow: 2px 2px 4px #000 !important; font-size:1.1rem !important;">KNIGHT</div>
+                </div>
+
+                @* FIGHTER: ENEMY *@
+                @{
+                    int enemyTranslation = -Engine.EnemyMarginRight;
+                    if (isEnemyAttacking && !Engine.State.Over && !Engine.State.Paused) { enemyTranslation -= 45; }
+                }
+                <div class="fighter @(isEnemyAttacking ? "enemy-dash-attack" : "") @(isEnemyHit ? "hit-shake" : "")" 
+                     style="transform: translateX(@(enemyTranslation)px) !important; position: absolute !important; right: 10% !important; z-index: 2 !important; margin-bottom: 20px !important;">
+                    <div class="fighter-sprite">
+                        @if (config.Enemy == "skeleton")
+                        {
+                            <svg width="160" height="180" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
-                                    <linearGradient id="armorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#9aa8b8" />
-                                        <stop offset="50%" stop-color="#5a6675" />
-                                        <stop offset="100%" stop-color="#343d46" />
-                                    </linearGradient>
-                                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" stop-color="#FFE066" />
-                                        <stop offset="100%" stop-color="#CC8800" />
-                                    </linearGradient>
-                                    <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <linearGradient id="boneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" stop-color="#FFFFFF" />
-                                        <stop offset="35%" stop-color="#DCE4EC" />
+                                        <stop offset="60%" stop-color="#E0E4EE" />
                                         <stop offset="100%" stop-color="#A5B1C2" />
                                     </linearGradient>
+                                    <linearGradient id="ironAxe" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#57606F" />
+                                        <stop offset="100%" stop-color="#2F3640" />
+                                    </linearGradient>
                                 </defs>
-                                <ellipse cx="65" cy="150" rx="40" ry="8" fill="rgba(0,0,0,0.45)" />
-
-                                <rect x="44" y="110" width="16" height="35" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3" rx="4" />
-                                <rect x="70" y="110" width="16" height="35" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3" rx="4" />
-                                <path d="M38 138 C38 132, 44 132, 44 132 H60 V146 H38 Z" fill="#2F3640" stroke="#1E232A" stroke-width="2" />
-                                <path d="M70 132 H86 C86 132, 92 132, 92 138 V146 H70 Z" fill="#2F3640" stroke="#1E232A" stroke-width="2" />
-
-                                <path d="M32 60 H98 L90 115 H40 Z" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3.5" />
-                                <path d="M40 60 L65 95 L90 60" fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-linecap="round" />
-                                <rect x="48" y="100" width="34" height="10" fill="url(#goldGrad)" stroke="#1E232A" stroke-width="2" rx="2" />
-
-                                <circle cx="65" cy="38" r="24" fill="url(#armorGrad)" stroke="#1E232A" stroke-width="3.5" />
-                                <path d="M49 24 H81 V36 H49 Z" fill="#2F3640" stroke="#1E232A" stroke-width="2" />
-                                <path d="M61 14 L65 -2 L69 14 Z" fill="#FF4757" />
-                                <rect x="52" y="30" width="10" height="4" rx="1" fill="#00D2D3" filter="drop-shadow(0 0 4px #00D2D3)" />
-                                <rect x="68" y="30" width="10" height="4" rx="1" fill="#00D2D3" filter="drop-shadow(0 0 4px #00D2D3)" />
-
-                                @{
-                                    string knightSwordAngle = isKnightAttacking ? "75" : (Engine.State.Blocking ? "-30" : "15");
-                                }
-                                <g transform="translate(100, 85) rotate(@knightSwordAngle)" style="transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: 10px 20px;">
-                                    <rect x="6" y="15" width="8" height="28" fill="#57606F" rx="2" stroke="#1E232A" stroke-width="2" />
-                                    <rect x="-12" y="12" width="44" height="7" fill="url(#goldGrad)" stroke="#1E232A" stroke-width="2" rx="2" />
-                                    <path d="M3 12 L6 -85 L10 -105 L14 -85 L17 12 Z" fill="url(#bladeGrad)" stroke="#1E232A" stroke-width="2.5" />
-                                </g>
-
-                                <g transform="translate(@(Engine.State.Blocking ? "55" : "22"), 68)" style="transition: transform 0.08s ease-out;">
-                                    <path d="M-22 -28 H22 V5 C22 28, 0 52, 0 58 C0 52, -22 28, -22 5 Z" fill="#B33939" stroke="#1E232A" stroke-width="3.5" />
-                                    <path d="M-22 5 H22 M0 -28 V58" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" />
+                                <ellipse cx="70" cy="150" rx="35" ry="7" fill="rgba(0,0,0,0.5)" />
+                                <path d="M52 105 L48 146 H56 L58 105 Z" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2.5" />
+                                <path d="M82 105 L84 146 H92 L88 105 Z" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2.5" />
+                                <line x1="70" y1="55" x2="70" y2="108" stroke="url(#boneGrad)" stroke-width="8" stroke-linecap="round" />
+                                <path d="M50 66 C50 60, 90 60, 90 66" fill="none" stroke="url(#boneGrad)" stroke-width="5" stroke-linecap="round" />
+                                <path d="M46 78 C46 72, 94 72, 94 78" fill="none" stroke="url(#boneGrad)" stroke-width="5" stroke-linecap="round" />
+                                <path d="M48 90 C48 84, 92 84, 92 90" fill="none" stroke="url(#boneGrad)" stroke-width="5" stroke-linecap="round" />
+                                <path d="M52 104 C52 96, 88 96, 88 104 Z" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2.5" />
+                                <circle cx="70" cy="32" r="18" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="3" />
+                                <rect x="61" y="44" width="18" height="10" rx="3" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2" />
+                                <ellipse cx="63" cy="32" rx="4" ry="5" fill="#1E232A" />
+                                <ellipse cx="77" cy="32" rx="4" ry="5" fill="#1E232A" />
+                                <circle cx="63" cy="32" r="2" fill="#FF4757" filter="drop-shadow(0 0 3px #FF2E93)" />
+                                <circle cx="77" cy="32" r="2" fill="#FF4757" filter="drop-shadow(0 0 3px #FF2E93)" />
+                                @{ string skeletonAxeAngle = isEnemyAttacking ? "-80" : "-15"; }
+                                <g transform="translate(42, 70) rotate(@skeletonAxeAngle)" style="transition: transform 0.08s ease-in-out; transform-origin: 5px 15px;">
+                                    <rect x="2" y="-60" width="6" height="110" fill="#747D8C" rx="2" stroke="#2C3A47" stroke-width="2" />
+                                    <path d="M4 -50 C-36 -58, -40 -15, 4 5 Z" fill="url(#ironAxe)" stroke="#1E232A" stroke-width="2.5" />
+                                    <rect x="0" y="-52" width="10" height="8" fill="url(#goldGrad)" />
                                 </g>
                             </svg>
-                        </div>
-                        <div class="fighter-label" style="text-align:center; font-weight:bold; color:#fff; margin-top:5px;">KNIGHT</div>
-                    </div>
-
-                    @* FIGHTER: ENEMY (FIX: Anchored with absolute position and binded to AI Movement translation) *@
-                    @{
-                        int enemyTranslation = -Engine.EnemyMarginRight;
-                        if (isEnemyAttacking && !Engine.State.Over && !Engine.State.Paused)
-                        {
-                            enemyTranslation -= 45; 
                         }
-                    }
-                    <div class="fighter @(isEnemyAttacking ? "enemy-dash-attack" : "") @(isEnemyHit ? "hit-shake" : "")" 
-                         style="transform: translateX(@(enemyTranslation)px); position: absolute; right: 80px; z-index: 2; margin-bottom: 30px;">
-                        <div class="fighter-sprite">
-                            @if (config.Enemy == "skeleton")
-                            {
-                                <svg width="140" height="160" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="boneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" stop-color="#FFFFFF" />
-                                            <stop offset="60%" stop-color="#E0E4EE" />
-                                            <stop offset="100%" stop-color="#A5B1C2" />
-                                        </linearGradient>
-                                        <linearGradient id="ironAxe" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" stop-color="#57606F" />
-                                            <stop offset="100%" stop-color="#2F3640" />
-                                        </linearGradient>
-                                    </defs>
-                                    <ellipse cx="70" cy="150" rx="35" ry="7" fill="rgba(0,0,0,0.5)" />
-
-                                    @* Legs *@
-                                    <path d="M52 105 L48 146 H56 L58 105 Z" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2.5" />
-                                    <path d="M82 105 L84 146 H92 L88 105 Z" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2.5" />
-
-                                    @* Ribcage & Spine Body *@
-                                    <line x1="70" y1="55" x2="70" y2="108" stroke="url(#boneGrad)" stroke-width="8" stroke-linecap="round" />
-                                    <path d="M50 66 C50 60, 90 60, 90 66" fill="none" stroke="url(#boneGrad)" stroke-width="5" stroke-linecap="round" />
-                                    <path d="M46 78 C46 72, 94 72, 94 78" fill="none" stroke="url(#boneGrad)" stroke-width="5" stroke-linecap="round" />
-                                    <path d="M48 90 C48 84, 92 84, 92 90" fill="none" stroke="url(#boneGrad)" stroke-width="5" stroke-linecap="round" />
-                                    <path d="M52 104 C52 96, 88 96, 88 104 Z" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2.5" />
-
-                                    @* Head Skull *@
-                                    <circle cx="70" cy="32" r="18" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="3" />
-                                    <rect x="61" y="44" width="18" height="10" rx="3" fill="url(#boneGrad)" stroke="#2C3A47" stroke-width="2" />
-                                    <ellipse cx="63" cy="32" rx="4" ry="5" fill="#1E232A" />
-                                    <ellipse cx="77" cy="32" rx="4" ry="5" fill="#1E232A" />
-                                    <circle cx="63" cy="32" r="2" fill="#FF4757" filter="drop-shadow(0 0 3px #FF2E93)" />
-                                    <circle cx="77" cy="32" r="2" fill="#FF4757" filter="drop-shadow(0 0 3px #FF2E93)" />
-
-                                    @* Dynamic Weapon Movement Fix *@
-                                    @{
-                                        string skeletonAxeAngle = isEnemyAttacking ? "-80" : "-15";
-                                    }
-                                    <g transform="translate(42, 70) rotate(@skeletonAxeAngle)" style="transition: transform 0.08s ease-in-out; transform-origin: 5px 15px;">
-                                        <rect x="2" y="-60" width="6" height="110" fill="#747D8C" rx="2" stroke="#2C3A47" stroke-width="2" />
-                                        <path d="M4 -50 C-36 -58, -40 -15, 4 5 Z" fill="url(#ironAxe)" stroke="#1E232A" stroke-width="2.5" />
-                                        <rect x="0" y="-52" width="10" height="8" fill="url(#goldGrad)" />
-                                    </g>
-                                </svg>
-                            }
-                            else if (config.Enemy == "warrior")
-                            {
-                                <svg width="140" height="160" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
-                                    <ellipse cx="70" cy="150" rx="42" ry="8" fill="rgba(0,0,0,0.55)" />
-                                    <rect x="46" y="105" width="14" height="38" fill="#2F3542" stroke="#1E232A" stroke-width="2.5" />
-                                    <rect x="80" y="105" width="14" height="38" fill="#2F3542" stroke="#1E232A" stroke-width="2.5" />
-                                    
-                                    <path d="M34 52 H102 L92 110 H44 Z" fill="#2F3542" stroke="#FF6B6B" stroke-width="3" />
-                                    <circle cx="70" cy="30" r="18" fill="#747D8C" stroke="#1E232A" stroke-width="3" />
-                                    <path d="M52 24 C52 8, 88 8, 88 24 Z" fill="#2f3640" stroke="#1E232A" stroke-width="2" />
-                                    
-                                    <circle cx="62" cy="28" r="3" fill="#FF0000" filter="drop-shadow(0 0 4px #FF0000)" />
-                                    <circle cx="78" cy="28" r="3" fill="#FF0000" filter="drop-shadow(0 0 4px #FF0000)" />
-
-                                    @{
-                                        string warriorWeaponAngle = isEnemyAttacking ? "-70" : "-10";
-                                    }
-                                    <g transform="translate(32, 70) rotate(@warriorWeaponAngle)" style="transition: transform 0.08s ease; transform-origin: 3px 15px;">
-                                        <rect x="0" y="-70" width="6" height="135" fill="#57606F" stroke="#1E232A" stroke-width="2" />
-                                        <path d="M6 -55 L36 -68 L32 -22 L6 -30 Z" fill="#747D8C" stroke="#1E232A" stroke-width="2.5" />
-                                    </g>
-                                </svg>
-                            }
-                            else if (config.Enemy == "dragon")
-                            {
-                                <svg width="190" height="190" viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
-                                    <ellipse cx="95" cy="170" rx="60" ry="12" fill="rgba(0,0,0,0.6)" />
-                                    <path d="M85 85 C35 25, 5 55, 0 115 C20 105, 50 105, 85 100 Z" fill="#781D1D" stroke="#3A0505" stroke-width="2.5" />
-                                    <path d="M105 85 C155 25, 185 55, 190 115 C170 105, 140 105, 105 100 Z" fill="#781D1D" stroke="#3A0505" stroke-width="2.5" />
-                                    <ellipse cx="95" cy="120" rx="34" ry="45" fill="#A82323" stroke="#4A0E0E" stroke-width="4" />
-                                    
-                                    <g transform="translate(105,40)">
-                                        <path d="M-12 -6 L25 -25 L45 2 L25 18 L-12 12 Z" fill="#FF2E2E" stroke="#4A0E0E" stroke-width="2" />
-                                        <circle cx="10" cy="-2" r="5" fill="#FFEE58" filter="drop-shadow(0 0 5px #FFA000)" />
-                                    </g>
-                                </svg>
-                            }
-
-                            @* FIREBALL PROJECTILE RUNTIME *@
-                            @if (Engine.IsProjectileActive)
-                            {
-                                <div class="sk-fire" style="position:absolute; left: -@(Engine.ProjectilePosition * 1.8)px; bottom: 70px; transition: left 0.04s linear; font-size: 2.5rem; text-shadow: 0 0 25px #FF3D00; z-index: 5;">🔥</div>
-                            }
-                        </div>
-                        <div class="fighter-label" style="text-align:center; font-weight:bold; color:#fff; margin-top:5px;">@config.Label.ToUpper()</div>
-                    </div>
-
-                    @* STATISTICS INTERFACE ENGINE PANELS *@
-                    <div class="stats-panels" style="z-index: 4; display:none;">
-                        <div class="stat-panel">
-                            <div class="sp-title">Knight Properties</div>
-                            <div class="sp-row"><span>hp</span><span>@Engine.State.KnightHP</span></div>
-                        </div>
-                    </div>
-
-                    @* LIVE COMBAT RADAR LOGS *@
-                    <div class="combat-log" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); text-align: center; background: rgba(0,0,0,0.6); padding: 5px 20px; rx: 5px; border-radius: 4px; z-index: 4;">
-                        @foreach (var log in Engine.CombatLog.Take(1))
+                        else if (config.Enemy == "warrior")
                         {
-                            <p class="log-entry" style="margin:0; color:#fff; font-size:1.1rem; font-weight:bold;">@log</p>
+                            <svg width="160" height="180" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="70" cy="150" rx="42" ry="8" fill="rgba(0,0,0,0.55)" />
+                                <rect x="46" y="105" width="14" height="38" fill="#2F3542" stroke="#1E232A" stroke-width="2.5" />
+                                <rect x="80" y="105" width="14" height="38" fill="#2F3542" stroke="#1E232A" stroke-width="2.5" />
+                                <path d="M34 52 H102 L92 110 H44 Z" fill="#2F3542" stroke="#FF6B6B" stroke-width="3" />
+                                <circle cx="70" cy="30" r="18" fill="#747D8C" stroke="#1E232A" stroke-width="3" />
+                                <path d="M52 24 C52 8, 88 8, 88 24 Z" fill="#2f3640" stroke="#1E232A" stroke-width="2" />
+                                <circle cx="62" cy="28" r="3" fill="#FF0000" filter="drop-shadow(0 0 4px #FF0000)" />
+                                <circle cx="78" cy="28" r="3" fill="#FF0000" filter="drop-shadow(0 0 4px #FF0000)" />
+                                @{ string warriorWeaponAngle = isEnemyAttacking ? "-70" : "-10"; }
+                                <g transform="translate(32, 70) rotate(@warriorWeaponAngle)" style="transition: transform 0.08s ease; transform-origin: 3px 15px;">
+                                    <rect x="0" y="-70" width="6" height="135" fill="#57606F" stroke="#1E232A" stroke-width="2" />
+                                    <path d="M6 -55 L36 -68 L32 -22 L6 -30 Z" fill="#747D8C" stroke="#1E232A" stroke-width="2.5" />
+                                </g>
+                            </svg>
+                        }
+                        else if (config.Enemy == "dragon")
+                        {
+                            <svg width="210" height="210" viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="95" cy="170" rx="60" ry="12" fill="rgba(0,0,0,0.6)" />
+                                <path d="M85 85 C35 25, 5 55, 0 115 C20 105, 50 105, 85 100 Z" fill="#781D1D" stroke="#3A0505" stroke-width="2.5" />
+                                <path d="M105 85 C155 25, 185 55, 190 115 C170 105, 140 105, 105 100 Z" fill="#781D1D" stroke="#3A0505" stroke-width="2.5" />
+                                <ellipse cx="95" cy="120" rx="34" ry="45" fill="#A82323" stroke="#4A0E0E" stroke-width="4" />
+                                <g transform="translate(105,40)">
+                                    <path d="M-12 -6 L25 -25 L45 2 L25 18 L-12 12 Z" fill="#FF2E2E" stroke="#4A0E0E" stroke-width="2" />
+                                    <circle cx="10" cy="-2" r="5" fill="#FFEE58" filter="drop-shadow(0 0 5px #FFA000)" />
+                                </g>
+                            </svg>
+                        }
+
+                        @* FIREBALL PROJECTILE *@
+                        @if (Engine.IsProjectileActive)
+                        {
+                            <div class="sk-fire" style="position:absolute !important; left: -@(Engine.ProjectilePosition * 2.2)px !important; bottom: 80px !important; transition: left 0.04s linear !important; font-size: 3rem !important; text-shadow: 0 0 30px #FF3D00 !important; z-index: 5 !important;">🔥</div>
                         }
                     </div>
+                    <div class="fighter-label" style="text-align:center !important; font-weight:bold !important; color:#fff !important; margin-top:5px !important; text-shadow: 2px 2px 4px #000 !important; font-size:1.1rem !important;">@config.Label.ToUpper()</div>
+                </div>
 
-                    @* FULL SCREEN ENGINE FLASH ELEMENT *@
-                    <div class="damage-flash @(ShouldFlashScreen ? "active-flash" : "")" style="z-index: 8;"></div>
-
-                    @* ENGINE DIALOG POPUPS / OVERLAYS *@
-                    @if (Engine.State.Over || Engine.State.Paused)
+                @* LIVE COMBAT RADAR LOGS (Dialogue Box Centered) *@
+                <div class="combat-log" style="position: absolute !important; bottom: 25px !important; left: 50% !important; transform: translateX(-50%) !important; text-align: center !important; background: rgba(11, 17, 30, 0.9) !important; width: 60% !important; max-width: 700px !important; padding: 15px 30px !important; border-radius: 8px !important; z-index: 4 !important; border: 2px solid #1e293b !important; box-shadow: 0 10px 25px rgba(0,0,0,0.6) !important;">
+                    @foreach (var log in Engine.CombatLog.Take(1))
                     {
-                        <div class="game-overlay show" style="z-index: 20;">
-                            <div class="overlay-title">@OverlayTitle</div>
-                            <div class="overlay-sub">@OverlaySubtitle</div>
-                            <div class="overlay-btns">
-                                @if (Engine.State.Paused && !Engine.State.Over)
-                                {
-                                    <button class="overlay-btn ob-gold" @onclick="Engine.TogglePause">▶ RESUME</button>
-                                }
-                                @if (Engine.State.Over && Engine.State.Level < 3 && IsCurrentGameVictory)
-                                {
-                                    <button class="overlay-btn ob-green" @onclick="() => StartBattle(Engine.State.Level + 1)">▶ NEXT LEVEL</button>
-                                }
-                                @if (Engine.State.Over)
-                                {
-                                    <button class="overlay-btn ob-gold" @onclick="() => StartBattle(Engine.State.Level)">↺ REPLAY</button>
-                                }
-                                <button class="overlay-btn ob-red" @onclick="ExitGameToCitadel">✕ EXIT</button>
-                            </div>
-                        </div>
+                        <p class="log-entry" style="margin:0 !important; color:#fff !important; font-size:1.2rem !important; font-weight:bold !important; font-family: monospace !important; letter-spacing: 0.5px !important; line-height: 1.4 !important;">@log</p>
                     }
                 </div>
 
-                @* MECHANICAL RUNTIME INTERACTIVE BUTTON CONTROLS *@
-                <div class="game-controls" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
-                    <button class="ctrl-btn" @onclick="() => Engine.MoveKnight(-1)">◀ BACKWARD</button>
-                    <button class="ctrl-btn" @onmousedown="Engine.StartBlock" @onmouseup="Engine.StopBlock" @onmouseleave="Engine.StopBlock">🛡️ BLOCK SHIELD</button>
-                    <button class="ctrl-btn ctrl-btn-attack" style="background:#ff4757; color:#fff; font-weight:bold;" @onclick="Engine.KnightAttack">⚔ ATTACK</button>
-                    <button class="ctrl-btn" @onclick="() => Engine.MoveKnight(1)">FORWARD ▶</button>
-                    <button class="ctrl-btn" @onclick="Engine.TogglePause">⏸ PAUSE</button>
-                </div>
+                @* DAMAGE FLASH SCREEN ELEMENT *@
+                <div class="damage-flash @(ShouldFlashScreen ? "active-flash" : "")" style="z-index: 8 !important; position:absolute !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; pointer-events:none !important;"></div>
+
+                @* OVERLAYS *@
+                @if (Engine.State.Over || Engine.State.Paused)
+                {
+                    <div class="game-overlay show" style="z-index: 200000 !important; position: absolute !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; background:rgba(7, 11, 20, 0.95) !important; display:flex !important; flex-direction:column !important; justify-content:center !important; align-items:center !important;">
+                        <div class="overlay-title" style="color:#ffb703 !important; font-size:3.5rem !important; font-weight:bold !important; margin-bottom:10px !important; letter-spacing:2px !important; text-shadow: 0 0 20px rgba(255,183,3,0.4) !important;">@OverlayTitle</div>
+                        <div class="overlay-sub" style="color:#94a3b8 !important; font-size:1.5rem !important; margin-bottom:30px !important;">@OverlaySubtitle</div>
+                        <div class="overlay-btns" style="display:flex !important; gap:20px !important;">
+                            @if (Engine.State.Paused && !Engine.State.Over)
+                            {
+                                <button class="overlay-btn ob-gold" style="padding:14px 32px !important; font-weight:bold !important; font-size:1.1rem !important; cursor:pointer !important; border-radius:6px !important; border:none !important; background:#ffb703 !important; color:#000 !important;" @onclick="Engine.TogglePause">▶ RESUME</button>
+                            }
+                            @if (Engine.State.Over && Engine.State.Level < 3 && IsCurrentGameVictory)
+                            {
+                                <button class="overlay-btn ob-green" style="padding:14px 32px !important; font-weight:bold !important; font-size:1.1rem !important; cursor:pointer !important; border-radius:6px !important; border:none !important; background:#22c55e !important; color:#fff !important;" @onclick="() => StartBattle(Engine.State.Level + 1)">▶ NEXT LEVEL</button>
+                            }
+                            @if (Engine.State.Over)
+                            {
+                                <button class="overlay-btn ob-gold" style="padding:14px 32px !important; font-weight:bold !important; font-size:1.1rem !important; cursor:pointer !important; border-radius:6px !important; border:none !important; background:#ffb703 !important; color:#000 !important;" @onclick="() => StartBattle(Engine.State.Level)">↺ REPLAY</button>
+                            }
+                            <button class="overlay-btn ob-red" style="padding:14px 32px !important; font-weight:bold !important; font-size:1.1rem !important; cursor:pointer !important; border-radius:6px !important; border:none !important; background:#ef4444 !important; color:#fff !important;" @onclick="ExitGameToCitadel">✕ EXIT</button>
+                        </div>
+                    </div>
+                }
             </div>
-        }
-    </main>
+        </div>
+
+        @* BOTTOM INTERACTIVE BUTTON CONTROLS *@
+        <div class="game-controls" style="background: #070b14 !important; padding: 25px !important; display: flex !important; justify-content: center !important; gap: 15px !important; border-top: 3px solid #1e293b !important; box-shadow: 0 -10px 25px rgba(0,0,0,0.5) !important; width: 100% !important; box-sizing: border-box !important;">
+            <button class="ctrl-btn" style="padding:12px 24px !important; cursor:pointer !important; font-size:1rem !important; font-weight:bold !important; background:#1e293b !important; color:#fff !important; border:1px solid #475569 !important; border-radius:6px !important;" @onclick="() => Engine.MoveKnight(-1)">◀ BACKWARD</button>
+            <button class="ctrl-btn" style="padding:12px 24px !important; cursor:pointer !important; font-size:1rem !important; font-weight:bold !important; background:#1e293b !important; color:#fff !important; border:1px solid #475569 !important; border-radius:6px !important;" @onmousedown="Engine.StartBlock" @onmouseup="Engine.StopBlock" @onmouseleave="Engine.StopBlock">🛡️ BLOCK SHIELD</button>
+            <button class="ctrl-btn ctrl-btn-attack" style="background:#ff4757 !important; color:#fff !important; font-weight:bold !important; padding:12px 40px !important; cursor:pointer !important; border:none !important; border-radius:6px !important; font-size:1.1rem !important; box-shadow: 0 0 15px rgba(255,71,87,0.4) !important;" @onclick="Engine.KnightAttack">⚔ ATTACK</button>
+            <button class="ctrl-btn" style="padding:12px 24px !important; cursor:pointer !important; font-size:1rem !important; font-weight:bold !important; background:#1e293b !important; color:#fff !important; border:1px solid #475569 !important; border-radius:6px !important;" @onclick="() => Engine.MoveKnight(1)">FORWARD ▶</button>
+            <button class="ctrl-btn" style="padding:12px 24px !important; cursor:pointer !important; font-size:1rem !important; font-weight:bold !important; background:#1e293b !important; color:#fff !important; border:1px solid #475569 !important; border-radius:6px !important;" @onclick="Engine.TogglePause">⏸ PAUSE</button>
+        </div>
+    </div>
+}
+</main>
 </div>
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-info">
+            <h3>MyWebsite</h3>
+            <p>Aapki website ka aik chota sa intro yahan aayega.</p>
+        </div>
+        <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 MyWebsite. All Rights Reserved.</p>
+    </div>
+</footer>
+
 
 @code {
     private enum ViewState { Auth, MainApp, GameScreen }
@@ -474,16 +571,17 @@
     private string ActiveTab { get; set; } = "home";
     private bool IsLoginTab { get; set; } = true;
 
-    // Custom Themes Bound Properties
+    // Custom Themes Bound Properties    
     private bool IsDarkStyle { get; set; } = true;
     private bool IsLightStyle { get; set; } = false;
     private bool IsColorblindStyle { get; set; } = false;
 
-    // Input Element Binding Targets
+    // Input Element Binding Targets    
     private string AuthUsername { get; set; } = string.Empty;
     private string AuthEmail { get; set; } = string.Empty;
     private string AuthPassword { get; set; } = string.Empty;
     private string AuthErrorMessage { get; set; } = string.Empty;
+    private string AuthSuccessMessage { get; set; } = string.Empty; // Fixed: Green alert track karne ke liye
 
     private User? CurrentUser { get; set; }
     private List<MatchHistory> MatchHistories { get; set; } = new();
@@ -495,7 +593,7 @@
 
     private int warriorWeaponAngle { get; set; } = 0;
 
-    // TEMPORARY IN-MEMORY DB SIMULATION
+    // TEMPORARY IN-MEMORY DB SIMULATION    
     private static List<User> InMemoryUsers = new List<User>();
     private static List<MatchHistory> InMemoryMatches = new List<MatchHistory>();
 
@@ -521,17 +619,47 @@
 
     private void RefreshUI() => InvokeAsync(StateHasChanged);
 
+    // Tab controllers to manage view toggles cleanly
+    private void SwitchToLoginTab()
+    {
+        IsLoginTab = true;
+        ResetAuthFields();
+    }
+
+    private void SwitchToRegisterTab()
+    {
+        IsLoginTab = false;
+        ResetAuthFields();
+    }
+
+    private void ResetAuthFields()
+    {
+        AuthErrorMessage = string.Empty;
+        AuthSuccessMessage = string.Empty;
+        AuthPassword = string.Empty;
+    }
+
     private void SetTab(string tabName)
     {
         ActiveTab = tabName;
         if (tabName == "profile") LoadUserChronicles();
     }
 
+    // --- 100% FIXED LOGIN FLOW ---
     private void HandleLogin()
     {
+        AuthErrorMessage = string.Empty;
+        AuthSuccessMessage = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(AuthUsername) || string.IsNullOrWhiteSpace(AuthPassword))
+        {
+            AuthErrorMessage = "Username and Password cannot be blank.";
+            return;
+        }
+
         string encodedPass = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(AuthPassword));
         
-        var matchedUser = InMemoryUsers.FirstOrDefault(u => u.Username.ToLower() == AuthUsername.ToLower()
+        var matchedUser = InMemoryUsers.FirstOrDefault(u => u.Username.ToLower() == AuthUsername.Trim().ToLower()
             && u.PasswordHash == encodedPass);
 
         if (matchedUser != null)
@@ -542,36 +670,61 @@
         }
         else
         {
-            AuthErrorMessage = "Invalid credentials standard challenge failed.";
+            AuthErrorMessage = "Invalid credentials standard challenge failed. Please sign up or check password.";
         }
     }
 
+    // --- 100% FIXED REGISTRATION FLOW ---
     private void HandleRegister()
     {
-        if (string.IsNullOrEmpty(AuthUsername) || string.IsNullOrEmpty(AuthPassword))
+        AuthErrorMessage = string.Empty;
+        AuthSuccessMessage = string.Empty;
+
+        // 1. Check for empty fields
+        if (string.IsNullOrWhiteSpace(AuthUsername) || string.IsNullOrWhiteSpace(AuthEmail) || string.IsNullOrWhiteSpace(AuthPassword))
         {
-            AuthErrorMessage = "Credentials cannot be blank.";
+            AuthErrorMessage = "All registration fields are required.";
             return;
         }
 
+        // 2. Simplified robust email verification
+        string cleanedEmail = AuthEmail.Trim();
+        if (!cleanedEmail.Contains("@") || !cleanedEmail.Contains(".") || cleanedEmail.IndexOf("@") > cleanedEmail.LastIndexOf("."))
+        {
+            AuthErrorMessage = "Invalid Email! Must include '@' and a domain extension (e.g., knight@gmail.com).";
+            return;
+        }
+
+        // 3. Password length validation
+        if (AuthPassword.Length < 8)
+        {
+            AuthErrorMessage = "Security Breach! Password must be at least 8 characters long.";
+            return;
+        }
+
+        // 4. Duplicate identity validation
+        if (InMemoryUsers.Any(u => u.Username.ToLower() == AuthUsername.Trim().ToLower()))
+        {
+            AuthErrorMessage = "Username already verified in another house. Try another name.";
+            return;
+        }
+
+        // 5. Save operation
         string encodedPass = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(AuthPassword));
-
-        if (InMemoryUsers.Any(u => u.Username.ToLower() == AuthUsername.ToLower()))
-        {
-            AuthErrorMessage = "Username already verified in another house.";
-            return;
-        }
 
         var newUser = new User
         {
-            Username = AuthUsername,
-            Email = AuthEmail,
+            Username = AuthUsername.Trim(),
+            Email = cleanedEmail,
             PasswordHash = encodedPass
         };
 
         InMemoryUsers.Add(newUser);
-        CurrentUser = newUser;
-        TransitionToMainApp();
+
+        // 6. Redirect execution flow to login view instead of immediate bypass
+        AuthSuccessMessage = "Account forged successfully! Log in below with your credentials.";
+        IsLoginTab = true; // Auto switches to login view
+        AuthPassword = string.Empty; // Wipes out password field for safety
     }
 
     private void TransitionToMainApp()
@@ -656,7 +809,6 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    // FIX: Handled List synchronization inside threads using temporary casting safeguards (.ToList())
     private async void AddHitTextElement(string text, string color, bool isEnemy)
     {
         var instance = new HitTextInstance { Text = text, Color = color, IsEnemy = isEnemy, Top = new Random().Next(35, 55) };

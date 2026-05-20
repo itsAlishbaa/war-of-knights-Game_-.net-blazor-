@@ -1241,3 +1241,114 @@
     .pause-btn {
         margin-left: auto;
     }
+/* Footer Styles */
+.site-footer {
+    background-color: #222;
+    color: #fff;
+    padding: 40px 20px 20px 20px;
+    font-family: sans-serif;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.footer-info, .footer-links {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+    .footer-links ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+            .footer-links ul li a {
+                color: #bbb;
+                text-decoration: none;
+            }
+
+                .footer-links ul li a:hover {
+                    color: #fff;
+                }
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #444;
+    padding-top: 20px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #aaa;
+}
+/* Updated Footer - Fixed Layout Issue */
+.site-footer {
+    display: block !important;
+    clear: both !important;
+    position: relative !important; /* Yeh game ke absolute elements ko breakdown karega */
+    z-index: 99999 !important; /* Taake game ki overlays iske upar na aayein */
+    background-color: #222;
+    color: #fff;
+    padding: 40px 20px 20px 20px;
+    font-family: sans-serif;
+    margin-top: 50px; /* Game controls aur footer ke beech thodi space */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.footer-info, .footer-links {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+    .footer-links ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+            .footer-links ul li a {
+                color: #bbb;
+                text-decoration: none;
+            }
+
+                .footer-links ul li a:hover {
+                    color: #fff;
+                }
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #444;
+    padding-top: 20px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #aaa;
+}
+.site-footer {
+    display: block !important;
+    clear: both !important;
+    position: relative !important;
+    background-color: #222;
+    color: #fff;
+    padding: 40px 20px 20px 20px;
+    font-family: sans-serif;
+    margin-top: 40px; /* Game ke neeche thodi space dene ke liye */
+}
