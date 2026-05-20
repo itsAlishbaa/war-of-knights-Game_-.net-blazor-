@@ -8,6 +8,25 @@
 @implements IDisposable
 @rendermode InteractiveServer
 
+@if (IsLoading)  
+{
+    <div class="loader-screen">
+        <div class="loader-content">
+            <h1 class="loader-title">⚔️ Iron Crusade Chronicles</h1>
+            
+            <div class="loading-bar-container">
+                <div class="loading-bar-progress"></div>
+            </div>
+            
+            <p class="loader-subtext">Are you ready for fight? Let's go...</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="app-container">
+        </div>
+}
 <style>
     /* Real-time Dynamic Fighter Animations to fix the static look */
     .fighter {
@@ -577,6 +596,16 @@ else if (CurrentView == ViewState.GameScreen)
 
 
 @code {
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // 3 Seconds (3000 milliseconds) tak loader screen dikhane ke liye delay
+        await Task.Delay(3000);
+        
+        // Loader khatam, game dashboard active
+        IsLoading = false;
+    }
     private enum ViewState { Auth, MainApp, GameScreen }
     private ViewState CurrentView { get; set; } = ViewState.Auth;
     private string ActiveTab { get; set; } = "home";
