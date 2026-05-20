@@ -5,7 +5,7 @@
 
 //namespace IronCrusa deBlazor.Data
 //{
-//    public class AppDbContext : DbContext
+//    public class App DbContext : DbContext
 //    {
 //        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
