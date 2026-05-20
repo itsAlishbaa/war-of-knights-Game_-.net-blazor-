@@ -546,30 +546,30 @@ else if (CurrentView == ViewState.GameScreen)
     <div class="footer-container">
         <div class="footer-section footer-info">
             <h3>⚔️ Iron Crusade Chronicles</h3>
-            <p>&copy; 2026 Battle of Knight | Powered by .NET 10 Blazor Server.</p>
+            <p>An immersive server-side Blazor arena experience.</p>
+            <p class="copyright-text">&copy; 2026 Battle of Knight | Powered by .NET 10 Blazor.</p>
         </div>
 
         <div class="footer-section footer-creators">
-            <span class="section-title">🛠️ Vanguard Devs:</span>
-            <div class="creators-list">
-                <span>⚡ Alishba</span>
-                <span>🛡️ Adan</span>
-                <span>🔮 Shemaan</span>
+            <h4>🛠️ Vanguard Devs</h4>
+            <div class="creators-vertical-stack">
+                <span class="dev-name">⚡ Alishba</span>
+                <span class="dev-name">🛡️ Adan</span>
+                <span class="dev-name">🔮 Shemaan</span>
             </div>
         </div>
 
         <div class="footer-section footer-links">
-            <span class="section-title">Realm Links</span>
-            <div class="icon-links-grid">
-                <a href="#" @onclick='() => SetTab("home")' title="Citadel Home">🏰 <span>Home</span></a>
-                <a href="#" @onclick='() => SetTab("profile")' title="Player Profile">🛡️ <span>Profile</span></a>
-                <a href="#" @onclick='() => SetTab("settings")' title="Settings Panel">⚙️ <span>Settings</span></a>
-                <a href="#" @onclick="LogOut" title="Disconnect" class="disconnect-link">✕ <span>Exit</span></a>
+            <h4>Realm Links</h4>
+            <div class="links-vertical-stack">
+                <a href="#" @onclick='() => SetTab("home")'>🏰 Home</a>
+                <a href="#" @onclick='() => SetTab("profile")'>🛡️ Profile</a>
+                <a href="#" @onclick='() => SetTab("settings")'>⚙️ Settings</a>
+                <a href="#" @onclick="LogOut" class="exit-link">✕ Disconnect</a>
             </div>
         </div>
     </div>
 </footer>
-
 </main>   
 </div>
 

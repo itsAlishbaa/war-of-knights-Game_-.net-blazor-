@@ -1245,33 +1245,31 @@
 /* Ultimate CSS Fix for Locked Layouts */
 /* Ultimate Force-Fix: Floating Bottom Footer */
 /* Clean & Smart Dynamic Footer */
-/* Sleek Bottom Bar Footer */
+/* Clean Bottom Bar Footer */
 .site-footer {
     display: block !important;
     position: fixed !important;
     bottom: 0 !important;
     right: 0 !important;
-    width: calc(100% - 250px) !important; /* Sidebar space left blank */
+    width: calc(100% - 250px) !important; /* Sidebar space safe */
     z-index: 9999 !important;
-    background: rgba(11, 17, 32, 0.95) !important; /* Semi-transparent dark blur */
-    backdrop-filter: blur(10px) !important;
+    background: rgba(11, 17, 32, 0.98) !important; /* Dark background */
     color: #94a3b8 !important;
-    padding: 12px 30px !important; /* Minimal height */
+    padding: 15px 30px !important;
     font-family: 'Segoe UI', sans-serif !important;
     border-top: 2px solid #1e293b !important;
-    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.6) !important;
     box-sizing: border-box !important;
 }
 
-/* Taake aakhri card is bar ke peeche bilkul dab na jaye */
+/* --- CRITICAL FIX: Yeh aakhri card (LVL 3) ko footer se upar push karega --- */
 .level-select-grid {
-    margin-bottom: 80px !important;
+    margin-bottom: 160px !important; /* Extra padding taake scroll karne par aakhri card poora upar dikhe */
 }
 
 .footer-container {
     display: flex !important;
     justify-content: space-between !important;
-    align-items: center !important; /* Vertically centered */
+    align-items: flex-start !important;
     max-width: 1400px !important;
     margin: 0 auto !important;
     gap: 20px !important;
@@ -1281,80 +1279,73 @@
     flex: 1 !important;
 }
 
-/* Left Section */
+/* Left Component */
 .footer-info h3 {
     color: #ffb703 !important;
-    font-size: 1.05rem !important;
-    margin: 0 0 4px 0 !important;
+    font-size: 1.1rem !important;
+    margin: 0 0 5px 0 !important;
 }
 
 .footer-info p {
-    font-size: 0.75rem !important;
-    color: #64748b !important;
-    margin: 0 !important;
-}
-
-/* Center Section: Developers Vertical Stack */
-.footer-creators {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-}
-
-.section-title {
-    color: #fff !important;
     font-size: 0.8rem !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+}
+
+.copyright-text {
+    color: #475569 !important;
+    margin-top: 8px !important;
+    font-size: 0.75rem !important;
+}
+
+/* Center Component: Developers Column */
+.footer-creators h4, .footer-links h4 {
+    color: #fff !important;
+    font-size: 0.9rem !important;
+    margin: 0 0 8px 0 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
-    margin-bottom: 4px !important;
-    font-weight: 600 !important;
 }
 
-.creators-list {
+.creators-vertical-stack {
     display: flex !important;
-    flex-direction: column !important; /* Line by line alignment */
-    gap: 2px !important;
-    align-items: flex-start !important;
+    flex-direction: column !important; /* One under another */
+    gap: 4px !important;
 }
 
-    .creators-list span {
-        font-size: 0.8rem !important;
-        color: #cbd5e1 !important;
-        font-weight: 500 !important;
-    }
+.dev-name {
+    font-size: 0.85rem !important;
+    color: #cbd5e1 !important;
+    font-weight: 500 !important;
+}
 
-/* Right Section: Clean Row Links with Icons */
-.footer-links {
+/* Right Component: Clean Links Column */
+.links-vertical-stack {
     display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
+    flex-direction: column !important; /* Clear vertical line appearance */
+    gap: 6px !important;
 }
 
-.icon-links-grid {
-    display: flex !important;
-    flex-direction: row !important; /* Stays in a clean row layout */
-    gap: 15px !important;
-}
-
-    .icon-links-grid a {
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
+    .links-vertical-stack a {
         color: #94a3b8 !important;
         text-decoration: none !important;
-        font-size: 0.8rem !important;
+        font-size: 0.85rem !important;
         transition: color 0.2s ease !important;
     }
 
-        .icon-links-grid a:hover {
+        .links-vertical-stack a:hover {
             color: #ffb703 !important;
         }
 
-        .icon-links-grid a.disconnect-link:hover {
-            color: #ef4444 !important;
+        .links-vertical-stack a.exit-link {
+            color: #64748b !important;
         }
 
-/* Responsive adjustment for small monitors */
+            .links-vertical-stack a.exit-link:hover {
+                color: #ef4444 !important;
+            }
+
+/* Responsive Rule */
 @media (max-width: 1024px) {
     .site-footer {
         width: 100% !important;
