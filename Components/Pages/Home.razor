@@ -8,6 +8,25 @@
 @implements IDisposable
 @rendermode InteractiveServer
 
+@if (IsLoading)  
+{
+    <div class="loader-screen">
+        <div class="loader-content">
+            <h1 class="loader-title">⚔️ Iron Crusade Chronicles</h1>
+            
+            <div class="loading-bar-container">
+                <div class="loading-bar-progress"></div>
+            </div>
+            
+            <p class="loader-subtext">Are you ready for fight? Let's go...</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="app-container">
+        </div>
+}
 <style>
     /* Real-time Dynamic Fighter Animations to fix the static look */
     .fighter {
@@ -540,32 +559,53 @@ else if (CurrentView == ViewState.GameScreen)
             <button class="ctrl-btn" style="padding:12px 24px !important; cursor:pointer !important; font-size:1rem !important; font-weight:bold !important; background:#1e293b !important; color:#fff !important; border:1px solid #475569 !important; border-radius:6px !important;" @onclick="Engine.TogglePause">⏸ PAUSE</button>
         </div>     
     </div>           
-}   
-</main>   
-</div>
+  }
+@* ------ FOOTER INJECTION WITH GAME THEME CONDITION ------ *@
 <footer class="site-footer">
     <div class="footer-container">
-        <div class="footer-info">
-            <h3>MyWebsite</h3>
-            <p>Aapki website ka aik chota sa intro yahan aayega.</p>
+        <div class="footer-section footer-info">
+            <h3>⚔️ Iron Crusade Chronicles</h3>
+            <p>An immersive server-side Blazor arena experience.</p>
+            <p class="copyright-text">&copy; 2026 Battle of Knight | Powered by .NET 10 Blazor.</p>
         </div>
-        <div class="footer-links">
-            <h4>Quick Links</h4>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
+
+        <div class="footer-section footer-creators">
+            <h4>🛠️ Vanguard Devs</h4>
+            <div class="creators-vertical-stack">
+                <span class="dev-name">⚡ Alishba</span>
+                <span class="dev-name">🛡️ Adan</span>
+                <span class="dev-name">🔮 Shemaan</span>
+            </div>
         </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; 2026 MyWebsite. All Rights Reserved.</p>
+
+        <div class="footer-section footer-links">
+            <h4>Realm Links</h4>
+            <div class="links-vertical-stack">
+                <a href="#" @onclick='() => SetTab("home")'>🏰 Home</a>
+                <a href="#" @onclick='() => SetTab("profile")'>🛡️ Profile</a>
+                <a href="#" @onclick='() => SetTab("settings")'>⚙️ Settings</a>
+                <a href="#" @onclick="LogOut" class="exit-link">✕ Disconnect</a>
+            </div>
+        </div>
     </div>
 </footer>
+</main>   
+</div>
+
+
 
 
 @code {
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // 3 Seconds (3000 milliseconds) tak loader screen dikhane ke liye delay
+        await Task.Delay(3000);
+        
+        // Loader khatam, game dashboard active
+        IsLoading = false;
+    }
     private enum ViewState { Auth, MainApp, GameScreen }
     private ViewState CurrentView { get; set; } = ViewState.Auth;
     private string ActiveTab { get; set; } = "home";

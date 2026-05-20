@@ -1241,114 +1241,234 @@
     .pause-btn {
         margin-left: auto;
     }
-/* Footer Styles */
+/* Professional Medieval-Themed Footer Styles */
+/* Ultimate CSS Fix for Locked Layouts */
+/* Ultimate Force-Fix: Floating Bottom Footer */
+/* Clean & Smart Dynamic Footer */
+/* Clean Bottom Bar Footer */
 .site-footer {
-    background-color: #222;
-    color: #fff;
-    padding: 40px 20px 20px 20px;
-    font-family: sans-serif;
+    display: block !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: calc(100% - 250px) !important; /* Sidebar space safe */
+    z-index: 9999 !important;
+    background: rgba(11, 17, 32, 0.98) !important; /* Dark background */
+    color: #94a3b8 !important;
+    padding: 15px 30px !important;
+    font-family: 'Segoe UI', sans-serif !important;
+    border-top: 2px solid #1e293b !important;
+    box-sizing: border-box !important;
+}
+
+/* --- CRITICAL FIX: Yeh aakhri card (LVL 3) ko footer se upar push karega --- */
+.level-select-grid {
+    margin-bottom: 160px !important; /* Extra padding taake scroll karne par aakhri card poora upar dikhe */
 }
 
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    gap: 20px !important;
 }
 
-.footer-info, .footer-links {
-    flex: 1;
-    min-width: 250px;
-    margin-bottom: 20px;
+.footer-section {
+    flex: 1 !important;
 }
 
-    .footer-links ul {
-        list-style: none;
-        padding: 0;
+/* Left Component */
+.footer-info h3 {
+    color: #ffb703 !important;
+    font-size: 1.1rem !important;
+    margin: 0 0 5px 0 !important;
+}
+
+.footer-info p {
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+}
+
+.copyright-text {
+    color: #475569 !important;
+    margin-top: 8px !important;
+    font-size: 0.75rem !important;
+}
+
+/* Center Component: Developers Column */
+.footer-creators h4, .footer-links h4 {
+    color: #fff !important;
+    font-size: 0.9rem !important;
+    margin: 0 0 8px 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.creators-vertical-stack {
+    display: flex !important;
+    flex-direction: column !important; /* One under another */
+    gap: 4px !important;
+}
+
+.dev-name {
+    font-size: 0.85rem !important;
+    color: #cbd5e1 !important;
+    font-weight: 500 !important;
+}
+
+/* Right Component: Clean Links Column */
+.links-vertical-stack {
+    display: flex !important;
+    flex-direction: column !important; /* Clear vertical line appearance */
+    gap: 6px !important;
+}
+
+    .links-vertical-stack a {
+        color: #94a3b8 !important;
+        text-decoration: none !important;
+        font-size: 0.85rem !important;
+        transition: color 0.2s ease !important;
     }
 
-        .footer-links ul li {
-            margin-bottom: 10px;
+        .links-vertical-stack a:hover {
+            color: #ffb703 !important;
         }
 
-            .footer-links ul li a {
-                color: #bbb;
-                text-decoration: none;
+        .links-vertical-stack a.exit-link {
+            color: #64748b !important;
+        }
+
+            .links-vertical-stack a.exit-link:hover {
+                color: #ef4444 !important;
             }
 
-                .footer-links ul li a:hover {
-                    color: #fff;
-                }
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid #444;
-    padding-top: 20px;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #aaa;
+/* Responsive Rule */
+@media (max-width: 1024px) {
+    .site-footer {
+        width: 100% !important;
+        left: 0 !important;
+    }
 }
-/* Updated Footer - Fixed Layout Issue */
-.site-footer {
-    display: block !important;
-    clear: both !important;
-    position: relative !important; /* Yeh game ke absolute elements ko breakdown karega */
-    z-index: 99999 !important; /* Taake game ki overlays iske upar na aayein */
-    background-color: #222;
-    color: #fff;
-    padding: 40px 20px 20px 20px;
-    font-family: sans-serif;
-    margin-top: 50px; /* Game controls aur footer ke beech thodi space */
+/* Full Screen Overlay for Game Loader */
+.loader-screen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: radial-gradient(circle, #0f172a 0%, #020617 100%) !important; /* Premium dark aura */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 100000 !important; /* Har element ke upar render hoga */
+    overflow: hidden !important;
 }
 
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
+/* Center Content Box */
+.loader-content {
+    text-align: center !important;
+    animation: fadeInContainer 1s ease-out !important;
 }
 
-.footer-info, .footer-links {
-    flex: 1;
-    min-width: 250px;
-    margin-bottom: 20px;
+/* Epic Title Animation with Golden Pulse */
+.loader-title {
+    font-family: 'Segoe UI', sans-serif !important;
+    font-size: 3rem !important;
+    font-weight: 800 !important;
+    color: #ffb703 !important;
+    text-shadow: 0 0 20px rgba(255, 183, 3, 0.5), 0 5px 15px rgba(0,0,0,0.8) !important;
+    margin-bottom: 25px !important;
+    letter-spacing: 1px !important;
+    animation: titleGlow 2s infinite alternate ease-in-out !important;
 }
 
-    .footer-links ul {
-        list-style: none;
-        padding: 0;
+/* Custom Sleek Animated Loading Bar Container */
+.loading-bar-container {
+    width: 320px !important;
+    height: 6px !important;
+    background: #1e293b !important;
+    border-radius: 10px !important;
+    margin: 0 auto 20px auto !important;
+    overflow: hidden !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;
+}
+
+/* Fast Progress Filler Animation */
+.loading-bar-progress {
+    width: 0% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, #3b82f6, #ffb703) !important;
+    border-radius: 10px !important;
+    animation: fillProgress 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+/* Subtext styling with typewriter neon blink */
+.loader-subtext {
+    font-family: 'Segoe UI', sans-serif !important;
+    font-size: 1.2rem !important;
+    font-style: italic !important;
+    color: #cbd5e1 !important;
+    letter-spacing: 0.5px !important;
+    opacity: 0.8 !important;
+    animation: textBlink 1.5s infinite alternate !important;
+}
+
+/* --- KEYFRAMES FOR ADVANCED ANIMATIONS --- */
+
+@keyframes fadeInContainer {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
     }
 
-        .footer-links ul li {
-            margin-bottom: 10px;
-        }
-
-            .footer-links ul li a {
-                color: #bbb;
-                text-decoration: none;
-            }
-
-                .footer-links ul li a:hover {
-                    color: #fff;
-                }
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid #444;
-    padding-top: 20px;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #aaa;
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
-.site-footer {
-    display: block !important;
-    clear: both !important;
-    position: relative !important;
-    background-color: #222;
-    color: #fff;
-    padding: 40px 20px 20px 20px;
-    font-family: sans-serif;
-    margin-top: 40px; /* Game ke neeche thodi space dene ke liye */
+
+@keyframes titleGlow {
+    0% {
+        transform: translateY(0);
+        text-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+    }
+
+    100% {
+        transform: translateY(-5px);
+        text-shadow: 0 0 30px rgba(255, 183, 3, 0.8), 0 0 40px rgba(239, 68, 68, 0.4);
+    }
+}
+
+@keyframes fillProgress {
+    0% {
+        width: 0%;
+    }
+
+    30% {
+        width: 45%;
+    }
+
+    60% {
+        width: 70%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes textBlink {
+    0% {
+        opacity: 0.4;
+        text-shadow: 0 0 5px rgba(255,255,255,0.1);
+    }
+
+    100% {
+        opacity: 1;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+    }
 }
