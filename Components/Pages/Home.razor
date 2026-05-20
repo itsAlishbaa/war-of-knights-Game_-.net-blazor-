@@ -599,11 +599,11 @@ else if (CurrentView == ViewState.GameScreen)
     private bool IsLoading { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
-    {
-        // 3 Seconds (3000 milliseconds) tak loader screen dikhane ke liye delay
+    { 
+        
         await Task.Delay(3000);
         
-        // Loader khatam, game dashboard active
+       
         IsLoading = false;
     }
     private enum ViewState { Auth, MainApp, GameScreen }
