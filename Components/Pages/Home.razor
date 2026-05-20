@@ -543,27 +543,32 @@ else if (CurrentView == ViewState.GameScreen)
 }   
 </main>   
 </div>
-<footer class="site-footer">
-    <div class="footer-container">
-        <div class="footer-info">
-            <h3>MyWebsite</h3>
-            <p>Aapki website ka aik chota sa intro yahan aayega.</p>
-        </div>
-        <div class="footer-links">
-            <h4>Quick Links</h4>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; 2026 MyWebsite. All Rights Reserved.</p>
-    </div>
-</footer>
 
+
+@* ------ FOOTER INJECTION WITH GAME THEME CONDITION ------ *@
+@if (CurrentView == ViewState.MainApp && ActiveTab == "home")
+{
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-info">
+                <h3>⚔️ Iron Crusade Chronicles</h3>
+                <p>An immersive server-side Blazor arena experience. Master your blade, defeat the undead hordes, and claim your rightful place in the Vanguard vanguard.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Realm Quick Links</h4>
+                <ul>
+                    <li><a href="#" @onclick='() => SetTab("home")'>🏰 Citadel Home</a></li>
+                    <li><a href="#" @onclick='() => SetTab("profile")'>🛡️ Player Profile</a></li>
+                    <li><a href="#" @onclick='() => SetTab("settings")'>⚙️ Settings Panel</a></li>
+                    <li><a href="#" @onclick="LogOut">✕ Disconnect</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Battle of Knight | Powered by .NET 10 Blazor Server.</p>
+        </div>
+    </footer>
+}
 
 @code {
     private enum ViewState { Auth, MainApp, GameScreen }
