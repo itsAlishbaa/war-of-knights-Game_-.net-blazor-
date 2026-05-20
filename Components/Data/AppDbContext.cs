@@ -3,7 +3,7 @@
 //using Microsoft.EntityFrameworkCore;
 //using System.Reflection.Emit;
   
-//namespace IronCrusa deBlazor.Data
+//namespace Iron.Crusa deBlazor.Data
 //{
 //    public class App DbContext : DbContext
 //    {
